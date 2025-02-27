@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createTicket, ticketStore } from './controllers/ticketController';
+import { createTicket } from './controllers/ticketController';
 import { getTeamMembers } from './controllers/teamMemberController';
+import { ticketStore } from './data/ticketStore';
 
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
