@@ -54,7 +54,7 @@ function createTicketStore() {
       // Clear the tickets file
       fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify([]));
     },
-    updateTicketStatus: (id: number, status: string) => {
+    updateTicketStatus: (id: number, status: "To do" | "Doing" | "Done") => {
       try {
         const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
         tickets = JSON.parse(fileContent);
