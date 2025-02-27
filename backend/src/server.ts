@@ -60,5 +60,16 @@ app.get('/tickets', (_, res: Response) => {
   res.json(tickets);
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+}).on('error', (err) => {
+  console.error('Server failed to start', err);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Unhandled exception', err);
+});
+
+export default app;
