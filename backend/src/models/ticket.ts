@@ -2,6 +2,6 @@ export type Ticket = {
   id: number;
   title: string;
   description: string;
-  deadline: string;
+  deadline: Date;
   assignedTo?: string;
 };

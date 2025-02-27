@@ -35,11 +35,11 @@ curl -X POST http://localhost:3001/tickets \
 
 ```json
 {
-  "id": "number",
-  "title": "string",
-  "description": "string",
-  "deadline": "string",
-  "assignedTo": "string | undefined"
+  "id": number,
+  "title": string,
+  "description": string,
+  "deadline": string,
+  "assignedTo"?: string
 }
 ```
 
@@ -61,11 +61,11 @@ curl http://localhost:3001/tickets
 ```json
 [
   {
-    "id": "number",
-    "title": "string",
-    "description": "string",
-    "deadline": "string",
-    "assignedTo": "string | undefined"
+    "id": number,
+    "title": string,
+    "description": string,
+    "deadline": string,
+    "assignedTo"?: string
   },
   ...
 ]
