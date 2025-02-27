@@ -75,20 +75,14 @@ export function createTicket(req: VercelRequest, res: VercelResponse) {
 }
 
 export function updateTicketStatus(req: VercelRequest, res: VercelResponse) {
-  const ticketId = req.query.id;
-  const { status } = req.body;
+  const { id: ticketId, status } = req.body;
 
   if (!ticketId) {
     return res.status(400).json({ error: 'Ticket ID is required' });
   }
 
-  if (typeof ticketId !== 'string') {
+  if (typeof ticketId !== 'number') {
     return res.status(400).json({ error: 'Invalid ticket ID format' });
-  }
-
-  const id = parseInt(ticketId, 10);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: 'Invalid ticket ID' });
   }
 
   if (!status) {
@@ -100,7 +94,7 @@ export function updateTicketStatus(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Invalid status value' });
   }
 
-  const updatedTicket = ticketStore.updateTicketStatus(id, status);
+  const updatedTicket = ticketStore.updateTicketStatus(ticketId, status);
 
   if (!updatedTicket) {
     return res.status(404).json({ error: 'Ticket not found' });

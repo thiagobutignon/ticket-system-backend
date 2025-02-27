@@ -95,7 +95,7 @@
     {
       "name": "Update Ticket Status",
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "header": [
           {
             "key": "Content-Type",
@@ -104,7 +104,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"status\": \"Doing\"\n}",
+          "raw": "{\n  \"id\": 1,\n  \"status\": \"Doing\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -112,22 +112,17 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3000/tickets?id=1",
+          "raw": "http://localhost:3000/tickets/update-status",
           "host": [
             "localhost"
           ],
           "port": "3000",
           "path": [
-            "tickets"
-          ],
-          "query": [
-            {
-              "key": "id",
-              "value": "1"
-            }
+            "tickets",
+            "update-status"
           ]
         },
-        "description": "Endpoint to update the status of a ticket by ID. Query parameter 'id' is required. Body should contain the new status."
+        "description": "Endpoint to update the status of a ticket by ID. Ticket ID is passed in the request body along with the new status."
       },
       "response": []
     }

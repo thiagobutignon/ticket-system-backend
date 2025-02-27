@@ -100,17 +100,12 @@ function createTicket(req, res) {
     return res.status(201).json(ticket);
 }
 function updateTicketStatus(req, res) {
-    const ticketId = req.query.id;
-    const { status } = req.body;
+    const { id: ticketId, status } = req.body;
     if (!ticketId) {
         return res.status(400).json({ error: 'Ticket ID is required' });
     }
-    if (typeof ticketId !== 'string') {
+    if (typeof ticketId !== 'number') {
         return res.status(400).json({ error: 'Invalid ticket ID format' });
-    }
-    const id = parseInt(ticketId, 10);
-    if (isNaN(id)) {
-        return res.status(400).json({ error: 'Invalid ticket ID' });
     }
     if (!status) {
         return res.status(400).json({ error: 'Status is required' });
@@ -119,7 +114,7 @@ function updateTicketStatus(req, res) {
     if (!allowedStatuses.includes(status)) {
         return res.status(400).json({ error: 'Invalid status value' });
     }
-    const updatedTicket = ticketStore_1.ticketStore.updateTicketStatus(id, status);
+    const updatedTicket = ticketStore_1.ticketStore.updateTicketStatus(ticketId, status);
     if (!updatedTicket) {
         return res.status(404).json({ error: 'Ticket not found' });
     }

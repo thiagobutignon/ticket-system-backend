@@ -21,7 +21,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.json(getTeamMembers());
   }
 
-  if (req.method === 'PUT' && req.url === '/tickets') {
+  if (req.method === 'POST' && req.url === '/tickets/update-status') {
     return updateTicketStatus(req, res);
   }
 

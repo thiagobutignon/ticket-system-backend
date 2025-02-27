@@ -17,7 +17,7 @@ function handler(req, res) {
     if (req.method === 'GET' && req.url === '/team-members') {
         return res.json((0, teamMemberController_1.getTeamMembers)());
     }
-    if (req.method === 'PUT' && req.url === '/tickets') {
+    if (req.method === 'POST' && req.url === '/tickets/update-status') {
         return (0, ticketController_1.updateTicketStatus)(req, res);
     }
     return res.status(405).json({ error: 'Method Not Allowed' });
