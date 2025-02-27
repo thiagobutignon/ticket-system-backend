@@ -1,8 +1,9 @@
 import { Ticket } from '../models/ticket';
 import * as fs from 'fs';
 import * as path from 'path';
+import os from 'os';
 
-const TICKETS_FILE_PATH = path.join(process.cwd(), 'tickets.json');
+const TICKETS_FILE_PATH = path.join(os.tmpdir(), 'tickets.json');
 
 let ticketStoreInstance: ReturnType<typeof createTicketStore> | null = null;
 

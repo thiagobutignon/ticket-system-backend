@@ -5,9 +5,10 @@ import { isRequired } from '../validation/required';
 import { minLength } from '../validation/min-length';
 import { getTeamMembers } from './teamMemberController';
 import * as path from 'path';
+import os from 'os';
 import { ticketStore } from '../data/ticketStore';
 
-const TICKETS_FILE_PATH = path.join(process.cwd(), 'tickets.json');
+const TICKETS_FILE_PATH = path.join(os.tmpdir(), 'tickets.json');
 
 
 export function assignTeamMember(ticketSkills: string[]): string | null {
