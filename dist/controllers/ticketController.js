@@ -1,24 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.teamMembers = exports.tickets = void 0;
+exports.tickets = void 0;
 exports.assignTeamMember = assignTeamMember;
 exports.createTicket = createTicket;
 const date_1 = require("../validation/date");
 const required_1 = require("../validation/required");
 const min_length_1 = require("../validation/min-length");
+const teamMemberController_1 = require("./teamMemberController");
 exports.tickets = [];
-exports.teamMembers = [
-    { name: 'Alice', skills: ['javascript', 'typescript', 'react'] },
-    { name: 'Bob', skills: ['python', 'javascript', 'node.js'] },
-    { name: 'Charlie', skills: ['typescript', 'node.js', 'aws'] },
-    { name: 'David', skills: ['python', 'data analysis'] },
-];
 function assignTeamMember(ticketSkills) {
-    if (!ticketSkills || ticketSkills.length === 0) {
-        return exports.teamMembers[Math.floor(Math.random() * exports.teamMembers.length)].name;
+    const teamMembers = (0, teamMemberController_1.getTeamMembers)();
+    if (!teamMembers || teamMembers.length === 0) {
+        return null;
     }
-    for (const member of exports.teamMembers) {
-        if (ticketSkills.some(skill => member.skills.includes(skill.toLowerCase()))) {
+    if (!ticketSkills || ticketSkills.length === 0) {
+        return teamMembers[Math.floor(Math.random() * teamMembers.length)].name;
+    }
+    for (const member of teamMembers) {
+        if (ticketSkills.some(skill => member.role === 'Developer')) { // Assuming only developers can be assigned
             return member.name;
         }
     }

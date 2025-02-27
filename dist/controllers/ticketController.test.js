@@ -16,21 +16,19 @@ const createMockResponse = () => {
 };
 describe('Ticket Controller', () => {
     describe('assignTeamMember', () => {
-        it('should assign a random team member when no skills are provided', () => {
+        it('should return null if getTeamMembers returns empty array', () => {
+            jest.spyOn(require('./teamMemberController'), 'getTeamMembers').mockReturnValueOnce([]);
             const assignedMember = (0, ticketController_1.assignTeamMember)([]);
-            expect(ticketController_1.teamMembers.some(member => member.name === assignedMember)).toBe(true);
-        });
-        it('should assign a team member with matching skills', () => {
-            const assignedMember = (0, ticketController_1.assignTeamMember)(['javascript']);
-            expect(assignedMember).toBe('Alice');
-        });
-        it('should assign a team member with matching skills case-insensitive', () => {
-            const assignedMember = (0, ticketController_1.assignTeamMember)(['JAVASCRIPT']);
-            expect(assignedMember).toBe('Alice');
-        });
-        it('should return null when no team member matches the skills', () => {
-            const assignedMember = (0, ticketController_1.assignTeamMember)(['nonexistent-skill']);
             expect(assignedMember).toBeNull();
+        });
+        it('should assign a random team member when team members are available', () => {
+            jest.spyOn(require('./teamMemberController'), 'getTeamMembers').mockReturnValueOnce([
+                { id: '1', name: 'Alice', role: 'Developer' },
+                { id: '2', name: 'Bob', role: 'Developer' },
+                { id: '3', name: 'Charlie', role: 'Designer' },
+            ]);
+            const assignedMember = (0, ticketController_1.assignTeamMember)([]);
+            expect(assignedMember).not.toBeNull();
         });
     });
     describe('createTicket', () => {

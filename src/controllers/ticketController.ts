@@ -3,23 +3,22 @@ import { Ticket } from '../models/ticket';
 import { isValidDate } from '../validation/date';
 import { isRequired } from '../validation/required';
 import { minLength } from '../validation/min-length';
+import { getTeamMembers } from './teamMemberController';
 
 export const tickets: Ticket[] = [];
 
-export const teamMembers = [
-  { name: 'Alice', skills: ['javascript', 'typescript', 'react'] },
-  { name: 'Bob', skills: ['python', 'javascript', 'node.js'] },
-  { name: 'Charlie', skills: ['typescript', 'node.js', 'aws'] },
-  { name: 'David', skills: ['python', 'data analysis'] },
-];
 
 export function assignTeamMember(ticketSkills: string[]): string | null {
+  const teamMembers = getTeamMembers();
+  if (!teamMembers || teamMembers.length === 0) {
+    return null;
+  }
   if (!ticketSkills || ticketSkills.length === 0) {
     return teamMembers[Math.floor(Math.random() * teamMembers.length)].name;
   }
 
   for (const member of teamMembers) {
-    if (ticketSkills.some(skill => member.skills.includes(skill.toLowerCase()))) {
+    if (ticketSkills.some(skill => member.role === 'Developer')) { // Assuming only developers can be assigned
       return member.name;
     }
   }

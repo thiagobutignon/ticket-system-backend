@@ -38,7 +38,7 @@ describe('Ticket API Integration Tests', () => {
     expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
       title: 'Fix login bug',
       description: 'There is an issue with the login process',
-      assignedTo: expect.any(String)
+      assignedTo: "Alice"
     }));
   });
 

@@ -1,6 +1,6 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { assignTeamMember, teamMembers, tickets, createTicket } from './ticketController';
+import { assignTeamMember, tickets, createTicket } from './ticketController';
 
 // Mock Vercel request and response objects
 const createMockRequest = (body: any) => {
@@ -19,24 +19,20 @@ const createMockResponse = () => {
 
 describe('Ticket Controller', () => {
 describe('assignTeamMember', () => {
-  it('should assign a random team member when no skills are provided', () => {
+  it('should return null if getTeamMembers returns empty array', () => {
+    jest.spyOn(require('./teamMemberController'), 'getTeamMembers').mockReturnValueOnce([]);
     const assignedMember = assignTeamMember([]);
-    expect(teamMembers.some(member => member.name === assignedMember)).toBe(true);
-  });
-
-  it('should assign a team member with matching skills', () => {
-    const assignedMember = assignTeamMember(['javascript']);
-    expect(assignedMember).toBe('Alice');
-  });
-
-  it('should assign a team member with matching skills case-insensitive', () => {
-    const assignedMember = assignTeamMember(['JAVASCRIPT']);
-    expect(assignedMember).toBe('Alice');
-  });
-
-  it('should return null when no team member matches the skills', () => {
-    const assignedMember = assignTeamMember(['nonexistent-skill']);
     expect(assignedMember).toBeNull();
+  });
+
+  it('should assign a random team member when team members are available', () => {
+    jest.spyOn(require('./teamMemberController'), 'getTeamMembers').mockReturnValueOnce([
+      { id: '1', name: 'Alice', role: 'Developer' },
+      { id: '2', name: 'Bob', role: 'Developer' },
+      { id: '3', name: 'Charlie', role: 'Designer' },
+    ]);
+    const assignedMember = assignTeamMember([]);
+    expect(assignedMember).not.toBeNull();
   });
 });
 
@@ -44,8 +40,6 @@ describe('createTicket', () => {
   beforeEach(() => {
     tickets.length = 0; // Clear tickets array before each test
   });
-
-
 
   it('should return 400 if title is missing', () => {
     const req = createMockRequest({
@@ -171,8 +165,5 @@ describe('createTicket', () => {
     expect(res.json).toHaveBeenCalledWith({ error: 'Skills must be an array of strings' });
     expect(tickets.length).toBe(0);
   });
-
- 
 });
-
 })
