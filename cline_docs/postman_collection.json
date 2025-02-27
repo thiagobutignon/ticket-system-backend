@@ -1,0 +1,96 @@
+{
+  "info": {
+    "_postman_id": "YOUR_POSTMAN_ID",
+    "name": "Ticket Assignment System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Root",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            ""
+          ]
+        },
+        "description": "Endpoint to check if the API is running."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Example Ticket\",\n  \"description\": \"This is an example ticket description.\",\n  \"deadline\": \"2025-03-01\",\n  \"skills\": [\"Frontend\", \"React\"]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/tickets",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "tickets"
+          ]
+        },
+        "description": "Endpoint to create a new ticket."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Tickets",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/tickets",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "tickets"
+          ]
+        },
+        "description": "Endpoint to get all tickets."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Team Members",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:3000/team-members",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "team-members"
+          ]
+        },
+        "description": "Endpoint to get all team members."
+      },
+      "response": []
+    }
+  ]
+}
