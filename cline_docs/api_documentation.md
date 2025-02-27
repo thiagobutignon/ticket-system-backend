@@ -119,6 +119,72 @@ Example Response (Success - 200 OK):
     "skills": ["Frontend", "React"]
   }
 ]
+
+### Update Ticket Status
+
+Endpoint: `PUT /tickets?id={ticketId}`
+
+Description: Updates the status of an existing ticket.
+
+Request Parameters:
+
+- `id` (query parameter, required): The ID of the ticket to update.
+
+Request Body:
+
+```json
+{
+  "status": "Status Value"
+}
+```
+
+- `status`: (string, required) The new status for the ticket. Allowed values are: "To do", "Doing", "Done".
+
+Example Request using curl:
+
+```bash
+curl -X PUT \\
+  http://localhost:3000/tickets?id=1 \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+    "status": "Doing"
+  }'
+```
+
+Response:
+
+- Status Code `200 OK`: Ticket status updated successfully. Returns the updated ticket object in JSON format.
+- Status Code `400 Bad Request`: Indicates validation errors in the request. The response body will contain an error message.
+- Status Code `404 Not Found`: Ticket with the given ID not found.
+
+Example Response (Success - 200 OK):
+
+```json
+{
+  "id": 1,
+  "title": "Example Ticket",
+  "description": "This is an example ticket description.",
+  "deadline": "2025-03-01T00:00:00.000Z",
+  "assignedTo": "Alice",
+  "skills": ["Frontend", "React"],
+  "status": "Doing"
+}
+```
+
+Example Response (Error - 400 Bad Request):
+
+```json
+{
+  "error": "Status is required"
+}
+```
+
+Example Response (Error - 404 Not Found):
+
+```json
+{
+  "error": "Ticket not found"
+}
 ```
 
 ### Get Team Members

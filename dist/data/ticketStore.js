@@ -32,11 +32,15 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ticketStore = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-const TICKETS_FILE_PATH = path.join(process.cwd(), 'tickets.json');
+const os_1 = __importDefault(require("os"));
+const TICKETS_FILE_PATH = path.join(os_1.default.tmpdir(), 'tickets.json');
 let ticketStoreInstance = null;
 function createTicketStore() {
     let tickets = [];
@@ -83,6 +87,25 @@ function createTicketStore() {
             nextId = 1; // Reset nextId when clearing tickets
             // Clear the tickets file
             fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify([]));
+        },
+        updateTicketStatus: (id, status) => {
+            try {
+                const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
+                tickets = JSON.parse(fileContent);
+            }
+            catch (error) {
+                if (error.code !== 'ENOENT') {
+                    console.error('Error loading tickets from file:', error);
+                }
+                return null;
+            }
+            const ticketIndex = tickets.findIndex(ticket => ticket.id === id);
+            if (ticketIndex === -1) {
+                return null;
+            }
+            tickets[ticketIndex].status = status;
+            fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify(tickets, null, 2));
+            return tickets[ticketIndex];
         },
     };
 }

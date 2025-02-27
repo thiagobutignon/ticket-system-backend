@@ -32,16 +32,21 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.assignTeamMember = assignTeamMember;
 exports.createTicket = createTicket;
+exports.updateTicketStatus = updateTicketStatus;
 const date_1 = require("../validation/date");
 const required_1 = require("../validation/required");
 const min_length_1 = require("../validation/min-length");
 const teamMemberController_1 = require("./teamMemberController");
 const path = __importStar(require("path"));
+const os_1 = __importDefault(require("os"));
 const ticketStore_1 = require("../data/ticketStore");
-const TICKETS_FILE_PATH = path.join(process.cwd(), 'tickets.json');
+const TICKETS_FILE_PATH = path.join(os_1.default.tmpdir(), 'tickets.json');
 function assignTeamMember(ticketSkills) {
     const teamMembers = (0, teamMemberController_1.getTeamMembers)();
     if (!teamMembers || teamMembers.length === 0) {
@@ -58,7 +63,7 @@ function assignTeamMember(ticketSkills) {
     return null;
 }
 function createTicket(req, res) {
-    const { title, description, deadline, skills } = req.body;
+    const { title, description, deadline, skills, assignedTo, status } = req.body;
     if ((0, required_1.isRequired)(title) || (0, min_length_1.minLength)(title, 3)) {
         return res
             .status(400)
@@ -82,16 +87,42 @@ function createTicket(req, res) {
     if (isNaN(deadlineDate.getTime()) || deadlineDate <= new Date()) {
         return res.status(400).json({ error: 'Deadline must be a future date' });
     }
-    const assignedTo = assignTeamMember(skills);
     const ticket = {
         id: 0,
         title,
         description,
         deadline: deadlineDate,
-        assignedTo,
+        assignedTo: !assignedTo ? assignedTo : assignTeamMember(skills),
         skills,
+        status
     };
     ticketStore_1.ticketStore.addTicket(ticket);
     return res.status(201).json(ticket);
+}
+function updateTicketStatus(req, res) {
+    const ticketId = req.query.id;
+    const { status } = req.body;
+    if (!ticketId) {
+        return res.status(400).json({ error: 'Ticket ID is required' });
+    }
+    if (typeof ticketId !== 'string') {
+        return res.status(400).json({ error: 'Invalid ticket ID format' });
+    }
+    const id = parseInt(ticketId, 10);
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid ticket ID' });
+    }
+    if (!status) {
+        return res.status(400).json({ error: 'Status is required' });
+    }
+    const allowedStatuses = ['To do', 'Doing', 'Done'];
+    if (!allowedStatuses.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status value' });
+    }
+    const updatedTicket = ticketStore_1.ticketStore.updateTicketStatus(id, status);
+    if (!updatedTicket) {
+        return res.status(404).json({ error: 'Ticket not found' });
+    }
+    return res.status(200).json(updatedTicket);
 }
 //# sourceMappingURL=ticketController.js.map

@@ -4,5 +4,6 @@ export type Ticket = {
   description: string;
   deadline: Date;
   assignedTo?: string;
-  skills?: string[];
+  skills?: string;
+  status?: 'To do' | 'Doing' | 'Done';
 };

@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createTicket } from './controllers/ticketController';
+import { createTicket, updateTicketStatus } from './controllers/ticketController';
 import { getTeamMembers } from './controllers/teamMemberController';
 import { ticketStore } from './data/ticketStore';
 
@@ -19,6 +19,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
   if (req.method === 'GET' && req.url === '/team-members') {
     return res.json(getTeamMembers());
+  }
+
+  if (req.method === 'PUT' && req.url === '/tickets') {
+    return updateTicketStatus(req, res);
   }
 
   return res.status(405).json({ error: 'Method Not Allowed' });

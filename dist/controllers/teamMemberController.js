@@ -4,7 +4,7 @@ exports.getTeamMembers = void 0;
 const getTeamMembers = () => {
     return [
         { id: '1', name: 'Alice', role: 'Developer' },
-        { id: '2', name: 'Bob', role: 'Developer' },
+        { id: '2', name: 'Bob', role: 'Product Manager' },
         { id: '3', name: 'Charlie', role: 'Designer' },
     ];
 };

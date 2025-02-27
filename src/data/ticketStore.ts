@@ -54,6 +54,26 @@ function createTicketStore() {
       // Clear the tickets file
       fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify([]));
     },
+    updateTicketStatus: (id: number, status: string) => {
+      try {
+        const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
+        tickets = JSON.parse(fileContent);
+      } catch (error: any) {
+        if (error.code !== 'ENOENT') {
+          console.error('Error loading tickets from file:', error);
+        }
+        return null;
+      }
+
+      const ticketIndex = tickets.findIndex(ticket => ticket.id === id);
+      if (ticketIndex === -1) {
+        return null;
+      }
+
+      tickets[ticketIndex].status = status;
+      fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify(tickets, null, 2));
+      return tickets[ticketIndex];
+    },
   };
 }
 

@@ -29,7 +29,7 @@ export function assignTeamMember(ticketSkills: string[]): string | null {
 }
 
 export function createTicket(req: VercelRequest, res: VercelResponse) {
-  const { title, description, deadline, skills } = req.body;
+  const { title, description, deadline, skills, assignedTo, status } = req.body;
 
   if (isRequired(title) || minLength(title, 3)) {
     return res
@@ -60,16 +60,51 @@ export function createTicket(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Deadline must be a future date' });
   }
 
-  const assignedTo = assignTeamMember(skills);
-
+ 
   const ticket: Ticket = {
     id: 0,
     title,
     description,
     deadline: deadlineDate,
-    assignedTo,
+    assignedTo: !assignedTo ? assignedTo : assignTeamMember(skills),
     skills,
+    status
   };
   ticketStore.addTicket(ticket);
   return res.status(201).json(ticket);
+}
+
+export function updateTicketStatus(req: VercelRequest, res: VercelResponse) {
+  const ticketId = req.query.id;
+  const { status } = req.body;
+
+  if (!ticketId) {
+    return res.status(400).json({ error: 'Ticket ID is required' });
+  }
+
+  if (typeof ticketId !== 'string') {
+    return res.status(400).json({ error: 'Invalid ticket ID format' });
+  }
+
+  const id = parseInt(ticketId, 10);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid ticket ID' });
+  }
+
+  if (!status) {
+    return res.status(400).json({ error: 'Status is required' });
+  }
+
+  const allowedStatuses = ['To do', 'Doing', 'Done'];
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ error: 'Invalid status value' });
+  }
+
+  const updatedTicket = ticketStore.updateTicketStatus(id, status);
+
+  if (!updatedTicket) {
+    return res.status(404).json({ error: 'Ticket not found' });
+  }
+
+  return res.status(200).json(updatedTicket);
 }

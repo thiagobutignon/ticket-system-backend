@@ -91,6 +91,45 @@
         "description": "Endpoint to get all team members."
       },
       "response": []
+    },
+    {
+      "name": "Update Ticket Status",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Doing\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/tickets?id=1",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "tickets"
+          ],
+          "query": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        },
+        "description": "Endpoint to update the status of a ticket by ID. Query parameter 'id' is required. Body should contain the new status."
+      },
+      "response": []
     }
   ]
 }
