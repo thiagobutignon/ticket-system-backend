@@ -1,56 +1,57 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = handler;
-const date_1 = require("./validation/date");
-const required_1 = require("./validation/required");
-const min_length_1 = require("./validation/min-length");
+const uuid_1 = require("uuid");
 const tickets = [];
-function handler(req, res) {
-    if (req.method === 'GET' && req.url === '/') {
-        return res.send('Express JS on Vercel');
+const agents = [
+    { id: 'agent1', name: 'Alice', skills: ['javascript', 'node.js', 'api'] },
+    { id: 'agent2', name: 'Bob', skills: ['react', 'typescript', 'ui/ux'] },
+    { id: 'agent3', name: 'Charlie', skills: ['node.js', 'database', 'sql'] },
+];
+function assignTicket(ticket) {
+    const availableAgent = agents.find(agent => ticket.requiredSkills.every(skill => agent.skills.includes(skill)));
+    if (availableAgent) {
+        ticket.agentId = availableAgent.id;
+        ticket.status = 'assigned';
     }
+    else {
+        ticket.status = 'open';
+        ticket.agentId = null;
+    }
+    return ticket;
+}
+function handler(req, res) {
     if (req.method === 'POST' && req.url === '/tickets') {
-        const { title, description, deadline, assignedTo, skills } = req.body;
-        if ((0, required_1.isRequired)(title) || (0, min_length_1.minLength)(title, 3)) {
-            return res
-                .status(400)
-                .json({ error: 'Title is required and must be at least 3 characters long' });
+        const { title, description, requiredSkills } = req.body;
+        if (!title || !description || !requiredSkills || !Array.isArray(requiredSkills)) {
+            return res.status(400).json({ error: 'Missing or invalid ticket details' });
         }
-        if (skills && !Array.isArray(skills)) {
-            return res.status(400).json({ error: 'Skills must be an array of strings' });
-        }
-        if ((0, required_1.isRequired)(description) || (0, min_length_1.minLength)(description, 3)) {
-            return res
-                .status(400)
-                .json({ error: 'Description is required and must be at least 3 characters long' });
-        }
-        if ((0, required_1.isRequired)(deadline)) {
-            return res.status(400).json({ error: 'Deadline is required' });
-        }
-        if (typeof deadline !== 'string' || !(0, date_1.isValidDate)(deadline)) {
-            return res.status(400).json({ error: 'Invalid deadline format' });
-        }
-        const deadlineDate = new Date(deadline);
-        if (isNaN(deadlineDate.getTime()) || deadlineDate <= new Date()) {
-            return res.status(400).json({ error: 'Deadline must be a future date' });
-        }
-        if (assignedTo && typeof assignedTo !== 'string') {
-            return res.status(400).json({ error: 'AssignedTo must be a string' });
-        }
-        const ticket = {
-            id: tickets.length + 1,
+        const newTicket = {
+            id: (0, uuid_1.v4)(),
             title,
             description,
-            deadline: deadlineDate,
-            assignedTo,
-            skills,
+            requiredSkills,
+            status: 'open',
+            agentId: null,
+            createdAt: new Date().toISOString(),
         };
-        tickets.push(ticket);
-        return res.status(201).json(ticket);
+        const assignedTicket = assignTicket(newTicket);
+        tickets.push(assignedTicket);
+        return res.status(201).json(assignedTicket);
     }
-    if (req.method === 'GET' && req.url === '/tickets') {
-        return res.json(tickets);
+    else if (req.method === 'GET' && req.url === '/tickets') {
+        return res.status(200).json(tickets);
     }
-    return res.status(405).json({ error: 'Method Not Allowed' });
+    else if (req.method === 'PUT' && req.url === '/tickets') {
+        tickets.forEach(ticket => {
+            if (ticket.status === 'open') {
+                assignTicket(ticket);
+            }
+        });
+        return res.status(200).json({ message: 'Attempted to assign all open tickets.' });
+    }
+    else {
+        return res.status(404).json({ error: 'Endpoint not found' });
+    }
 }
 //# sourceMappingURL=index.js.map
