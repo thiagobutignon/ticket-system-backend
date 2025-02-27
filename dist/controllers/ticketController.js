@@ -33,70 +33,15 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ticketStore = void 0;
 exports.assignTeamMember = assignTeamMember;
 exports.createTicket = createTicket;
 const date_1 = require("../validation/date");
 const required_1 = require("../validation/required");
 const min_length_1 = require("../validation/min-length");
 const teamMemberController_1 = require("./teamMemberController");
-const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
+const ticketStore_1 = require("../data/ticketStore");
 const TICKETS_FILE_PATH = path.join(process.cwd(), 'tickets.json');
-let ticketStoreInstance = null;
-function createTicketStore() {
-    let tickets = [];
-    let nextId = 1; // Initialize nextId
-    // Load tickets from file on initialization
-    try {
-        const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
-        tickets = JSON.parse(fileContent);
-        if (tickets.length > 0) {
-            nextId = tickets[tickets.length - 1].id + 1;
-        }
-    }
-    catch (error) {
-        if (error.code !== 'ENOENT') { // Ignore 'File Not Found' error
-            console.error('Error loading tickets from file:', error);
-        }
-        tickets = []; // Initialize with empty array if file not found or error
-    }
-    return {
-        getTickets: () => {
-            // Read tickets from file every time to ensure up-to-date data
-            try {
-                const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
-                tickets = JSON.parse(fileContent);
-            }
-            catch (error) {
-                if (error.code !== 'ENOENT') { // Ignore 'File Not Found' error
-                    console.error('Error loading tickets from file:', error);
-                }
-                tickets = [];
-            }
-            console.log('getTickets called', tickets);
-            return tickets;
-        },
-        addTicket: (ticket) => {
-            ticket.id = nextId++; // Assign current nextId to ticket and then increment
-            tickets.push(ticket);
-            // Write tickets to file after adding
-            fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify(tickets, null, 2));
-        },
-        clearTickets: () => {
-            tickets = [];
-            nextId = 1; // Reset nextId when clearing tickets
-            // Clear the tickets file
-            fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify([]));
-        },
-    };
-}
-exports.ticketStore = (() => {
-    if (!ticketStoreInstance) {
-        ticketStoreInstance = createTicketStore();
-    }
-    return ticketStoreInstance;
-})();
 function assignTeamMember(ticketSkills) {
     const teamMembers = (0, teamMemberController_1.getTeamMembers)();
     if (!teamMembers || teamMembers.length === 0) {
@@ -106,7 +51,7 @@ function assignTeamMember(ticketSkills) {
         return teamMembers[Math.floor(Math.random() * teamMembers.length)].name;
     }
     for (const member of teamMembers) {
-        if (ticketSkills.some(skill => member.role === 'Developer')) { // Assuming only developers can be assigned
+        if (ticketSkills.some(skill => member.role === 'Developer')) {
             return member.name;
         }
     }
@@ -139,14 +84,14 @@ function createTicket(req, res) {
     }
     const assignedTo = assignTeamMember(skills);
     const ticket = {
-        id: 0, // Temporary ID, will be replaced by ticketStore.addTicket
+        id: 0,
         title,
         description,
         deadline: deadlineDate,
         assignedTo,
         skills,
     };
-    exports.ticketStore.addTicket(ticket);
+    ticketStore_1.ticketStore.addTicket(ticket);
     return res.status(201).json(ticket);
 }
 //# sourceMappingURL=ticketController.js.map
