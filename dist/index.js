@@ -10,11 +10,14 @@ function handler(req, res) {
         return res.send('Express JS on Vercel');
     }
     if (req.method === 'POST' && req.url === '/tickets') {
-        const { title, description, deadline, assignedTo } = req.body;
+        const { title, description, deadline, assignedTo, skills } = req.body;
         if ((0, required_1.isRequired)(title) || (0, min_length_1.minLength)(title, 3)) {
             return res
                 .status(400)
                 .json({ error: 'Title is required and must be at least 3 characters long' });
+        }
+        if (skills && !Array.isArray(skills)) {
+            return res.status(400).json({ error: 'Skills must be an array of strings' });
         }
         if ((0, required_1.isRequired)(description) || (0, min_length_1.minLength)(description, 3)) {
             return res
@@ -40,6 +43,7 @@ function handler(req, res) {
             description,
             deadline: deadlineDate,
             assignedTo,
+            skills,
         };
         tickets.push(ticket);
         return res.status(201).json(ticket);

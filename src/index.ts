@@ -12,12 +12,16 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'POST' && req.url === '/tickets') {
-    const { title, description, deadline, assignedTo } = req.body;
+    const { title, description, deadline, assignedTo, skills } = req.body;
 
     if (isRequired(title) || minLength(title, 3)) {
       return res
         .status(400)
         .json({ error: 'Title is required and must be at least 3 characters long' });
+    }
+
+    if (skills && !Array.isArray(skills)) {
+      return res.status(400).json({ error: 'Skills must be an array of strings' });
     }
 
     if (isRequired(description) || minLength(description, 3)) {
@@ -49,6 +53,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       description,
       deadline: deadlineDate,
       assignedTo,
+      skills,
     };
 
     tickets.push(ticket);

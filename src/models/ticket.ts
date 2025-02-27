@@ -4,4 +4,5 @@ export type Ticket = {
   description: string;
   deadline: Date;
   assignedTo?: string;
+  skills?: string[];
 };
