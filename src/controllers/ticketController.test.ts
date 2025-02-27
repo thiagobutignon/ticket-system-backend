@@ -1,8 +1,8 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { assignTeamMember, ticketStore, createTicket } from './ticketController';
+import { assignTeamMember, createTicket } from './ticketController';
+import { ticketStore } from '../data/ticketStore';
 
-// Mock Vercel request and response objects
 const createMockRequest = (body: any) => {
   return {
     body: body,
