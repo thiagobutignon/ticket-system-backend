@@ -17,6 +17,7 @@ const createMockResponse = () => {
   return res;
 };
 
+describe('Ticket Controller', () => {
 describe('assignTeamMember', () => {
   it('should assign a random team member when no skills are provided', () => {
     const assignedMember = assignTeamMember([]);
@@ -173,3 +174,5 @@ describe('createTicket', () => {
 
  
 });
+
+})
