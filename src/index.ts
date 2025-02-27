@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createTicket, tickets } from './controllers/ticketController';
+import { createTicket, ticketStore } from './controllers/ticketController';
 import { getTeamMembers } from './controllers/teamMemberController';
+
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET' && req.url === '/') {
@@ -12,7 +13,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'GET' && req.url === '/tickets') {
-    return res.json(tickets);
+    return res.json(ticketStore.getTickets());
   }
 
   if (req.method === 'GET' && req.url === '/team-members') {

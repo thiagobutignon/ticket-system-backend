@@ -1,6 +1,6 @@
 
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { assignTeamMember, tickets, createTicket } from './ticketController';
+import { assignTeamMember, ticketStore, createTicket } from './ticketController';
 
 // Mock Vercel request and response objects
 const createMockRequest = (body: any) => {
@@ -38,7 +38,7 @@ describe('assignTeamMember', () => {
 
 describe('createTicket', () => {
   beforeEach(() => {
-    tickets.length = 0; // Clear tickets array before each test
+    ticketStore.getTickets().length = 0; // Clear tickets array before each test
   });
 
   it('should return 400 if title is missing', () => {
@@ -53,7 +53,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Title is required and must be at least 3 characters long' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if title is too short', () => {
@@ -69,7 +69,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Title is required and must be at least 3 characters long' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if description is missing', () => {
@@ -84,7 +84,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Description is required and must be at least 3 characters long' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if description is too short', () => {
@@ -100,7 +100,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Description is required and must be at least 3 characters long' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if deadline is missing', () => {
@@ -115,7 +115,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Deadline is required' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if deadline is invalid format', () => {
@@ -131,7 +131,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Invalid deadline format' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if deadline is in the past', () => {
@@ -147,7 +147,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Deadline must be a future date' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 
   it('should return 400 if skills is not an array', () => {
@@ -163,7 +163,7 @@ describe('createTicket', () => {
 
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({ error: 'Skills must be an array of strings' });
-    expect(tickets.length).toBe(0);
+    expect(ticketStore.getTickets().length).toBe(0);
   });
 });
 })

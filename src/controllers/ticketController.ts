@@ -5,7 +5,19 @@ import { isRequired } from '../validation/required';
 import { minLength } from '../validation/min-length';
 import { getTeamMembers } from './teamMemberController';
 
-export const tickets: Ticket[] = [];
+export const ticketStore = (() => {
+  let tickets: Ticket[] = [];
+
+  return {
+    getTickets: () => tickets,
+    addTicket: (ticket: Ticket) => {
+      tickets.push(ticket);
+    },
+    clearTickets: () => {
+      tickets = [];
+    },
+  };
+})();
 
 
 export function assignTeamMember(ticketSkills: string[]): string | null {
@@ -60,7 +72,7 @@ export function createTicket(req: VercelRequest, res: VercelResponse) {
     const assignedTo = assignTeamMember(skills);
 
     const ticket: Ticket = {
-      id: tickets.length + 1,
+      id: ticketStore.getTickets().length + 1,
       title,
       description,
       deadline: deadlineDate,
@@ -68,6 +80,6 @@ export function createTicket(req: VercelRequest, res: VercelResponse) {
       skills,
     };
 
-    tickets.push(ticket);
+    ticketStore.addTicket(ticket);
     return res.status(201).json(ticket);
   }

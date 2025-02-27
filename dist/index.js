@@ -11,7 +11,7 @@ function handler(req, res) {
         return (0, ticketController_1.createTicket)(req, res);
     }
     if (req.method === 'GET' && req.url === '/tickets') {
-        return res.json(ticketController_1.tickets);
+        return res.json(ticketController_1.ticketStore.getTickets());
     }
     if (req.method === 'GET' && req.url === '/team-members') {
         return res.json((0, teamMemberController_1.getTeamMembers)());

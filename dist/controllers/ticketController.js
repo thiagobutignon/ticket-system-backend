@@ -1,13 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tickets = void 0;
+exports.ticketStore = void 0;
 exports.assignTeamMember = assignTeamMember;
 exports.createTicket = createTicket;
 const date_1 = require("../validation/date");
 const required_1 = require("../validation/required");
 const min_length_1 = require("../validation/min-length");
 const teamMemberController_1 = require("./teamMemberController");
-exports.tickets = [];
+exports.ticketStore = (() => {
+    let tickets = [];
+    return {
+        getTickets: () => tickets,
+        addTicket: (ticket) => {
+            tickets.push(ticket);
+        },
+        clearTickets: () => {
+            tickets = [];
+        },
+    };
+})();
 function assignTeamMember(ticketSkills) {
     const teamMembers = (0, teamMemberController_1.getTeamMembers)();
     if (!teamMembers || teamMembers.length === 0) {
@@ -50,14 +61,14 @@ function createTicket(req, res) {
     }
     const assignedTo = assignTeamMember(skills);
     const ticket = {
-        id: exports.tickets.length + 1,
+        id: exports.ticketStore.getTickets().length + 1,
         title,
         description,
         deadline: deadlineDate,
         assignedTo,
         skills,
     };
-    exports.tickets.push(ticket);
+    exports.ticketStore.addTicket(ticket);
     return res.status(201).json(ticket);
 }
 //# sourceMappingURL=ticketController.js.map

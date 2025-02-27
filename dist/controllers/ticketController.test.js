@@ -33,7 +33,7 @@ describe('Ticket Controller', () => {
     });
     describe('createTicket', () => {
         beforeEach(() => {
-            ticketController_1.tickets.length = 0; // Clear tickets array before each test
+            ticketController_1.ticketStore.getTickets().length = 0; // Clear tickets array before each test
         });
         it('should return 400 if title is missing', () => {
             const req = createMockRequest({
@@ -45,7 +45,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Title is required and must be at least 3 characters long' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if title is too short', () => {
             const req = createMockRequest({
@@ -58,7 +58,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Title is required and must be at least 3 characters long' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if description is missing', () => {
             const req = createMockRequest({
@@ -70,7 +70,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Description is required and must be at least 3 characters long' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if description is too short', () => {
             const req = createMockRequest({
@@ -83,7 +83,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Description is required and must be at least 3 characters long' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if deadline is missing', () => {
             const req = createMockRequest({
@@ -95,7 +95,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Deadline is required' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if deadline is invalid format', () => {
             const req = createMockRequest({
@@ -108,7 +108,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Invalid deadline format' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if deadline is in the past', () => {
             const req = createMockRequest({
@@ -121,7 +121,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Deadline must be a future date' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
         it('should return 400 if skills is not an array', () => {
             const req = createMockRequest({
@@ -134,7 +134,7 @@ describe('Ticket Controller', () => {
             (0, ticketController_1.createTicket)(req, res);
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ error: 'Skills must be an array of strings' });
-            expect(ticketController_1.tickets.length).toBe(0);
+            expect(ticketController_1.ticketStore.getTickets().length).toBe(0);
         });
     });
 });
