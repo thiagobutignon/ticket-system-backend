@@ -1,4 +1,3 @@
-
 import { isValidDate } from './date';
 
 describe('isValidDate', () => {

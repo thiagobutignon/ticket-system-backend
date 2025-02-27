@@ -1,4 +1,3 @@
-// backend/src/validation/required.test.ts
 import { isRequired } from './required';
 
 describe('isRequired', () => {

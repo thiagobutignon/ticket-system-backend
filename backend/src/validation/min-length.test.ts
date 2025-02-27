@@ -1,4 +1,3 @@
-// backend/src/validation/min-length.test.ts
 import { minLength } from './min-length';
 
 describe('minLength', () => {
