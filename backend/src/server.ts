@@ -1,13 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import { Ticket } from './models/ticket';
 
-type Ticket = {
-  id: number;
-  title: string;
-  description: string;
-  deadline: string;
-  assignedTo?: string;
-};
 
 const app = express();
 app.use(cors());

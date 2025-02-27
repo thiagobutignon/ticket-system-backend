@@ -1,0 +1,54 @@
+{
+  "info": {
+    "_postman_id": "...",
+    "name": "Ticket Assignment System API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Ticket",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"\",\n  \"description\": \"\",\n  \"deadline\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/tickets",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Tickets",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3001/tickets",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "tickets"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
