@@ -6,13 +6,34 @@ import { minLength } from './validation/min-length';
 
 const tickets: Ticket[] = [];
 
+const teamMembers = [
+  { name: 'Alice', skills: ['javascript', 'typescript', 'react'] },
+  { name: 'Bob', skills: ['python', 'javascript', 'node.js'] },
+  { name: 'Charlie', skills: ['typescript', 'node.js', 'aws'] },
+  { name: 'David', skills: ['python', 'data analysis'] },
+];
+
+function assignTeamMember(ticketSkills: string[]): string | null {
+  if (!ticketSkills || ticketSkills.length === 0) {
+    return teamMembers[Math.floor(Math.random() * teamMembers.length)].name;
+  }
+
+  for (const member of teamMembers) {
+    if (ticketSkills.some(skill => member.skills.includes(skill.toLowerCase()))) {
+      return member.name;
+    }
+  }
+  return null;
+}
+
+
 export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET' && req.url === '/') {
     return res.send('Express JS on Vercel');
   }
 
   if (req.method === 'POST' && req.url === '/tickets') {
-    const { title, description, deadline, assignedTo, skills } = req.body;
+    const { title, description, deadline, skills } = req.body;
 
     if (isRequired(title) || minLength(title, 3)) {
       return res
@@ -43,9 +64,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Deadline must be a future date' });
     }
 
-    if (assignedTo && typeof assignedTo !== 'string') {
-      return res.status(400).json({ error: 'AssignedTo must be a string' });
-    }
+    const assignedTo = assignTeamMember(skills);
 
     const ticket: Ticket = {
       id: tickets.length + 1,
