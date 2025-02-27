@@ -13,7 +13,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === 'GET' && req.url === '/tickets') {
-    return res.json(ticketStore.getTickets());
+    return res.json(ticketStore.getTickets()); // Use ticketStore here
   }
 
   if (req.method === 'GET' && req.url === '/team-members') {

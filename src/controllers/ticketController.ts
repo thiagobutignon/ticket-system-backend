@@ -4,19 +4,67 @@ import { isValidDate } from '../validation/date';
 import { isRequired } from '../validation/required';
 import { minLength } from '../validation/min-length';
 import { getTeamMembers } from './teamMemberController';
+import * as fs from 'fs';
+import * as path from 'path';
 
-export const ticketStore = (() => {
+const TICKETS_FILE_PATH = path.join(process.cwd(), 'tickets.json');
+
+let ticketStoreInstance: ReturnType<typeof createTicketStore> | null = null;
+
+function createTicketStore() {
   let tickets: Ticket[] = [];
+  let nextId = 1; // Initialize nextId
+
+  // Load tickets from file on initialization
+  try {
+    const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
+    tickets = JSON.parse(fileContent);
+    if (tickets.length > 0) {
+      nextId = tickets[tickets.length - 1].id + 1;
+    }
+  } catch (error: any) {
+    if (error.code !== 'ENOENT') { // Ignore 'File Not Found' error
+      console.error('Error loading tickets from file:', error);
+    }
+    tickets = []; // Initialize with empty array if file not found or error
+  }
+
 
   return {
-    getTickets: () => tickets,
+    getTickets: () => {
+      // Read tickets from file every time to ensure up-to-date data
+      try {
+        const fileContent = fs.readFileSync(TICKETS_FILE_PATH, 'utf-8');
+        tickets = JSON.parse(fileContent);
+      } catch (error: any) {
+        if (error.code !== 'ENOENT') { // Ignore 'File Not Found' error
+          console.error('Error loading tickets from file:', error);
+        }
+        tickets = [];
+      }
+      console.log('getTickets called', tickets);
+      return tickets;
+    },
     addTicket: (ticket: Ticket) => {
+      ticket.id = nextId++; // Assign current nextId to ticket and then increment
       tickets.push(ticket);
+      // Write tickets to file after adding
+      fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify(tickets, null, 2));
     },
     clearTickets: () => {
       tickets = [];
+      nextId = 1; // Reset nextId when clearing tickets
+      // Clear the tickets file
+      fs.writeFileSync(TICKETS_FILE_PATH, JSON.stringify([]));
     },
   };
+}
+
+export const ticketStore = (() => {
+  if (!ticketStoreInstance) {
+    ticketStoreInstance = createTicketStore();
+  }
+  return ticketStoreInstance;
 })();
 
 
@@ -72,14 +120,13 @@ export function createTicket(req: VercelRequest, res: VercelResponse) {
     const assignedTo = assignTeamMember(skills);
 
     const ticket: Ticket = {
-      id: ticketStore.getTickets().length + 1,
+      id: 0, // Temporary ID, will be replaced by ticketStore.addTicket
       title,
       description,
       deadline: deadlineDate,
       assignedTo,
       skills,
     };
-
     ticketStore.addTicket(ticket);
     return res.status(201).json(ticket);
   }
