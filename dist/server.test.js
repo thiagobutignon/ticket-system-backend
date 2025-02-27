@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const server_1 = __importDefault(require("./server"));
+const _1 = __importDefault(require("."));
 describe('Ticket API Integration Tests', () => {
     let ticketId;
     it('should create a new ticket', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,7 +23,7 @@ describe('Ticket API Integration Tests', () => {
             deadline: '2025-12-31T23:59:59.999Z',
             assignedTo: 'John Doe',
         };
-        const response = yield (0, supertest_1.default)(server_1.default)
+        const response = yield (0, supertest_1.default)(_1.default)
             .post('/tickets')
             .send(newTicket)
             .expect('Content-Type', /json/)
@@ -36,7 +36,7 @@ describe('Ticket API Integration Tests', () => {
         ticketId = response.body.id;
     }));
     it('should get all tickets', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(server_1.default).get('/tickets').expect(200);
+        const response = yield (0, supertest_1.default)(_1.default).get('/tickets').expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBeGreaterThan(0);
     }));
@@ -46,7 +46,7 @@ describe('Ticket API Integration Tests', () => {
             deadline: '2025-12-31T23:59:59.999Z',
             assignedTo: 'Jane Doe',
         };
-        const response = yield (0, supertest_1.default)(server_1.default)
+        const response = yield (0, supertest_1.default)(_1.default)
             .post('/tickets')
             .send(newTicket)
             .expect('Content-Type', /json/)
@@ -60,7 +60,7 @@ describe('Ticket API Integration Tests', () => {
             deadline: 'invalid-date',
             assignedTo: 'Jane Doe',
         };
-        const response = yield (0, supertest_1.default)(server_1.default)
+        const response = yield (0, supertest_1.default)(_1.default)
             .post('/tickets')
             .send(newTicket)
             .expect('Content-Type', /json/)
@@ -68,7 +68,7 @@ describe('Ticket API Integration Tests', () => {
         expect(response.body.error).toBe('Invalid deadline format');
     }));
     it('should return a ticket list with at least one item', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(server_1.default).get('/tickets').expect(200);
+        const response = yield (0, supertest_1.default)(_1.default).get('/tickets').expect(200);
         expect(response.body.length).toBeGreaterThan(0);
     }));
     it('should return error if deadline is in the past', () => __awaiter(void 0, void 0, void 0, function* () {
@@ -78,7 +78,7 @@ describe('Ticket API Integration Tests', () => {
             deadline: '2022-12-31T23:59:59.999Z',
             assignedTo: 'John Doe',
         };
-        const response = yield (0, supertest_1.default)(server_1.default)
+        const response = yield (0, supertest_1.default)(_1.default)
             .post('/tickets')
             .send(newTicket)
             .expect('Content-Type', /json/)
@@ -90,7 +90,7 @@ describe('Ticket API Integration Tests', () => {
             description: 'Missing title and deadline',
             assignedTo: 'John Doe',
         };
-        const response = yield (0, supertest_1.default)(server_1.default)
+        const response = yield (0, supertest_1.default)(_1.default)
             .post('/tickets')
             .send(newTicket)
             .expect('Content-Type', /json/)
