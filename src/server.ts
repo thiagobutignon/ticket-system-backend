@@ -5,7 +5,7 @@ import { isValidDate } from './validation/date';
 import { isRequired } from './validation/required';
 import { minLength } from './validation/min-length';
 
-export const app = express();
+const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -63,16 +63,15 @@ app.get('/tickets', (_, res: Response) => {
   res.json(tickets);
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-}).on('error', (err) => {
-  console.error('Server failed to start', err);
+app.listen(port, (err?: Error) => {
+  if (err) {
+      console.error(err);
+      process.exit(1);
+  } else {
+      console.log('[INFO] Server Running on port:', port);
+  }
 });
-
-process.on('uncaughtException', (err) => {
-  console.error('Unhandled exception', err);
-});
-
 export default app;
+
