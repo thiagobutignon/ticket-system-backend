@@ -11,6 +11,9 @@ app.use(express.json());
 
 const tickets: Ticket[] = [];
 
+app.get('/', (req, res) => {
+  res.send('Express JS on Vercel')
+})
 
 app.post('/tickets', (req: Request, res: Response): any => {
   const { title, description, deadline, assignedTo } = req.body;
