@@ -69,8 +69,8 @@ function createTicket(req, res) {
             .status(400)
             .json({ error: 'Title is required and must be at least 3 characters long' });
     }
-    if (skills && !Array.isArray(skills)) {
-        return res.status(400).json({ error: 'Skills must be an array of strings' });
+    if (skills) {
+        return res.status(400).json({ error: 'Skills must be valid' });
     }
     if ((0, required_1.isRequired)(description) || (0, min_length_1.minLength)(description, 3)) {
         return res

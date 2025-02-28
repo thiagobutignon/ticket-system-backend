@@ -37,8 +37,8 @@ export function createTicket(req: VercelRequest, res: VercelResponse) {
       .json({ error: 'Title is required and must be at least 3 characters long' });
   }
 
-  if (skills && !Array.isArray(skills)) {
-    return res.status(400).json({ error: 'Skills must be an array of strings' });
+  if (skills) {
+    return res.status(400).json({ error: 'Skills must be valid' });
   }
 
   if (isRequired(description) || minLength(description, 3)) {
